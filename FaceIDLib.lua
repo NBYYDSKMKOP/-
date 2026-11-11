@@ -8011,190 +8011,191 @@ function FaceIDLib:CreatePanel(options)
     })
     window.Face = face
 
-    local tabLook = window:CreateTab("外观", nil)
-    local sectionLook = tabLook:CreateSection("面板")
-    sectionLook:CreateSlider({
-        Name = "尺寸",
-        Min = 72,
-        Max = 320,
-        Value = faceConfig.Panel and faceConfig.Panel.Size or FaceIDLib.Defaults.Panel.Size,
-        Step = 1,
-        Decimals = 0,
-        Callback = function(value)
-            face:SetSize(value)
-        end,
-    })
-    sectionLook:CreateSlider({
-        Name = "圆角",
-        Min = 0,
-        Max = 160,
-        Value = faceConfig.Panel and faceConfig.Panel.CornerRadius or FaceIDLib.Defaults.Panel.CornerRadius,
-        Step = 1,
-        Decimals = 0,
-        Callback = function(value)
-            face:SetCornerRadius(value)
-        end,
-    })
-    sectionLook:CreateSlider({
-        Name = "透明度",
-        Min = 0,
-        Max = 0.95,
-        Value = faceConfig.Panel and faceConfig.Panel.Transparency or FaceIDLib.Defaults.Panel.Transparency,
-        Step = 0.01,
-        Decimals = 2,
-        Callback = function(value)
-            face:SetTransparency(value)
-        end,
-    })
-    local sectionIcon = tabLook:CreateSection("图标")
-    sectionIcon:CreateSlider({
-        Name = "图标缩放",
-        Min = 0.2,
-        Max = 1,
-        Value = FaceIDLib.Defaults.Icon.Scale,
-        Step = 0.01,
-        Decimals = 2,
-        Callback = function(value)
-            face:ApplyConfig({ Icon = { Scale = value } })
-        end,
-    })
-    sectionIcon:CreateSlider({
-        Name = "线条粗细",
-        Min = 0.01,
-        Max = 0.15,
-        Value = FaceIDLib.Defaults.Icon.Thickness,
-        Step = 0.001,
-        Decimals = 3,
-        Callback = function(value)
-            face:ApplyConfig({ Icon = { Thickness = value } })
-        end,
-    })
-    sectionIcon:CreateToggle({
-        Name = "显示文字",
-        Value = FaceIDLib.Defaults.Text.Enabled,
-        Callback = function(state)
-            face:ApplyConfig({ Text = { Enabled = state } })
-        end,
-    })
-    local sectionPlay = tabLook:CreateSection("演示")
-    sectionPlay:CreateButton({
-        Name = "成功验证",
-        Text = "Face ID 成功",
-        Accent = true,
-        ButtonText = "运行",
-        Callback = function()
-            face:Verify({ Success = true })
-        end,
-    })
-    sectionPlay:CreateButton({
-        Name = "失败验证",
-        ButtonText = "运行",
-        Callback = function()
-            face:Verify({ Success = false })
-        end,
-    })
-    sectionPlay:CreateButton({
-        Name = "连播",
-        ButtonText = "循环",
-        Callback = function()
-            face:ApplyConfig({ Animation = { Loop = true } })
-            face:Show()
-        end,
-    })
+local tabLook = window:CreateTab("Appearance", nil)
+local sectionLook = tabLook:CreateSection("Panel")
+sectionLook:CreateSlider({
+    Name = "Size",
+    Min = 72,
+    Max = 320,
+    Value = faceConfig.Panel and faceConfig.Panel.Size or FaceIDLib.Defaults.Panel.Size,
+    Step = 1,
+    Decimals = 0,
+    Callback = function(value)
+        face:SetSize(value)
+    end,
+})
+sectionLook:CreateSlider({
+    Name = "Corner Radius",
+    Min = 0,
+    Max = 160,
+    Value = faceConfig.Panel and faceConfig.Panel.CornerRadius or FaceIDLib.Defaults.Panel.CornerRadius,
+    Step = 1,
+    Decimals = 0,
+    Callback = function(value)
+        face:SetCornerRadius(value)
+    end,
+})
+sectionLook:CreateSlider({
+    Name = "Transparency",
+    Min = 0,
+    Max = 0.95,
+    Value = faceConfig.Panel and faceConfig.Panel.Transparency or FaceIDLib.Defaults.Panel.Transparency,
+    Step = 0.01,
+    Decimals = 2,
+    Callback = function(value)
+        face:SetTransparency(value)
+    end,
+})
+local sectionIcon = tabLook:CreateSection("Icon")
+sectionIcon:CreateSlider({
+    Name = "Icon Scale",
+    Min = 0.2,
+    Max = 1,
+    Value = FaceIDLib.Defaults.Icon.Scale,
+    Step = 0.01,
+    Decimals = 2,
+    Callback = function(value)
+        face:ApplyConfig({ Icon = { Scale = value } })
+    end,
+})
+sectionIcon:CreateSlider({
+    Name = "Line Thickness",
+    Min = 0.01,
+    Max = 0.15,
+    Value = FaceIDLib.Defaults.Icon.Thickness,
+    Step = 0.001,
+    Decimals = 3,
+    Callback = function(value)
+        face:ApplyConfig({ Icon = { Thickness = value } })
+    end,
+})
+sectionIcon:CreateToggle({
+    Name = "Show Label",
+    Value = FaceIDLib.Defaults.Text.Enabled,
+    Callback = function(state)
+        face:ApplyConfig({ Text = { Enabled = state } })
+    end,
+})
+local sectionPlay = tabLook:CreateSection("Demo")
+sectionPlay:CreateButton({
+    Name = "Successful Scan",
+    Text = "Face ID Passed",
+    Accent = true,
+    ButtonText = "Run",
+    Callback = function()
+        face:Verify({ Success = true })
+    end,
+})
+sectionPlay:CreateButton({
+    Name = "Failed Scan",
+    ButtonText = "Run",
+    Callback = function()
+        face:Verify({ Success = false })
+    end,
+})
+sectionPlay:CreateButton({
+    Name = "Loop Preview",
+    ButtonText = "Loop",
+    Callback = function()
+        face:ApplyConfig({ Animation = { Loop = true } })
+        face:Show()
+    end,
+})
 
-    local tabTheme = window:CreateTab("主题", nil)
-    local sectionTheme = tabTheme:CreateSection("预设")
-    sectionTheme:CreateDropdown({
-        Name = "主题",
-        Items = FaceIDLib.themeNames(),
-        Value = faceConfig.Theme or FaceIDLib.Defaults.Theme,
-        Callback = function(name)
-            face:SetTheme(name)
-            window:SetTheme(name)
-        end,
-    })
-    sectionTheme:CreateDropdown({
-        Name = "图标风格",
-        Items = FaceIDLib.styleNames(),
-        Value = faceConfig.IconStyle or FaceIDLib.Defaults.IconStyle,
-        Callback = function(name)
-            face:SetIconStyle(name)
-        end,
-    })
-    local sectionColors = tabTheme:CreateSection("颜色")
-    sectionColors:CreateColorPicker({
-        Name = "面容线条",
-        Value = "#34C759",
-        Callback = function(color)
-            face:SetColor("Face", color)
-        end,
-    })
-    sectionColors:CreateColorPicker({
-        Name = "面板底色",
-        Value = "#070807",
-        Callback = function(color)
-            face:SetColor("Panel", color)
-        end,
-    })
-    sectionColors:CreateColorPicker({
-        Name = "成功色",
-        Value = "#34C759",
-        Callback = function(color)
-            face:SetColor("Success", color)
-        end,
-    })
-    sectionColors:CreateColorPicker({
-        Name = "失败色",
-        Value = "#FF453A",
-        Callback = function(color)
-            face:SetColor("Fail", color)
-        end,
-    })
+local tabTheme = window:CreateTab("Theme", nil)
+local sectionTheme = tabTheme:CreateSection("Presets")
+sectionTheme:CreateDropdown({
+    Name = "Theme",
+    Items = FaceIDLib.themeNames(),
+    Value = faceConfig.Theme or FaceIDLib.Defaults.Theme,
+    Callback = function(name)
+        face:SetTheme(name)
+        window:SetTheme(name)
+    end,
+})
+sectionTheme:CreateDropdown({
+    Name = "Icon Style",
+    Items = FaceIDLib.styleNames(),
+    Value = faceConfig.IconStyle or FaceIDLib.Defaults.IconStyle,
+    Callback = function(name)
+        face:SetIconStyle(name)
+    end,
+})
+local sectionColors = tabTheme:CreateSection("Colors")
+sectionColors:CreateColorPicker({
+    Name = "Face Lines",
+    Value = "#34C759",
+    Callback = function(color)
+        face:SetColor("Face", color)
+    end,
+})
+sectionColors:CreateColorPicker({
+    Name = "Panel Background",
+    Value = "#070807",
+    Callback = function(color)
+        face:SetColor("Panel", color)
+    end,
+})
+sectionColors:CreateColorPicker({
+    Name = "Success Color",
+    Value = "#34C759",
+    Callback = function(color)
+        face:SetColor("Success", color)
+    end,
+})
+sectionColors:CreateColorPicker({
+    Name = "Failure Color",
+    Value = "#FF453A",
+    Callback = function(color)
+        face:SetColor("Fail", color)
+    end,
+})
 
-    local tabRun = window:CreateTab("脚本", nil)
-    local sectionRun = tabRun:CreateSection("加载完自动执行")
-    sectionRun:CreateToggle({
-        Name = "启用",
-        Value = false,
-        Callback = function(state)
-            face:ApplyConfig({ AutoExec = { Enabled = state } })
-        end,
-    })
-    sectionRun:CreateInput({
-        Name = "脚本链接",
-        Placeholder = "https://raw.githubusercontent.com/...",
-        Callback = function(text)
-            face:ApplyConfig({ AutoExec = { Url = text, Enabled = true } })
-        end,
-    })
-    sectionRun:CreateButton({
-        Name = "立即跑链接",
-        ButtonText = "执行",
-        Accent = true,
-        Callback = function()
-            local cfg = face:GetConfig()
-            local url = cfg.AutoExec and cfg.AutoExec.Url or ""
-            if url ~= "" then
-                face:ExecuteUrl(url)
-            end
-        end,
-    })
-    sectionRun:CreateButton({
-        Name = "验证并执行",
-        ButtonText = "运行",
-        Callback = function()
-            face:Verify({ Success = true })
-        end,
-    })
+local tabRun = window:CreateTab("Scripts", nil)
+local sectionRun = tabRun:CreateSection("Auto-run on Load")
+sectionRun:CreateToggle({
+    Name = "Enabled",
+    Value = false,
+    Callback = function(state)
+        face:ApplyConfig({ AutoExec = { Enabled = state } })
+    end,
+})
+sectionRun:CreateInput({
+    Name = "Script URL",
+    Placeholder = "https://raw.githubusercontent.com/...",
+    Callback = function(text)
+        face:ApplyConfig({ AutoExec = { Url = text, Enabled = true } })
+    end,
+})
+sectionRun:CreateButton({
+    Name = "Run URL Now",
+    ButtonText = "Execute",
+    Accent = true,
+    Callback = function()
+        local cfg = face:GetConfig()
+        local url = cfg.AutoExec and cfg.AutoExec.Url or ""
+        if url ~= "" then
+            face:ExecuteUrl(url)
+        end
+    end,
+})
+sectionRun:CreateButton({
+    Name = "Verify and Run",
+    ButtonText = "Run",
+    Callback = function()
+        face:Verify({ Success = true })
+    end,
+})
 
-    local tabAbout = window:CreateTab("关于", nil)
-    local sectionAbout = tabAbout:CreateSection("FaceIDLib")
-    sectionAbout:CreateLabel("单文件 UI 库", "面容 ID 动画 + 控制面板 + 主题 + 自动脚本加载")
-    sectionAbout:CreateParagraph("调用方式", "local lib = loadstring(game:HttpGet(url))() local face = lib.new({ Theme = \"IOSDark\" }) face:Verify({ Success = true })")
-    sectionAbout:CreateParagraph("配置项", "Theme / IconStyle / Panel / Icon / Colors / Animation / Position / Text / Sound / AutoExec / Window")
-    sectionAbout:CreateParagraph("数量", tostring(#FaceIDLib.ThemeOrder) .. " 套主题," .. tostring(#FaceIDLib.styleNames()) .. " 种图标风格")
-    return window, face
+local tabAbout = window:CreateTab("About", nil)
+local sectionAbout = tabAbout:CreateSection("FaceIDLib")
+sectionAbout:CreateLabel("Single-file UI Library", "Face ID animation + control panel + themes + auto script loader")
+sectionAbout:CreateParagraph("Usage", "local lib = loadstring(game:HttpGet(url))() local face = lib.new({ Theme = \"IOSDark\" }) face:Verify({ Success = true })")
+sectionAbout:CreateParagraph("Config Keys", "Theme / IconStyle / Panel / Icon / Colors / Animation / Position / Text / Sound / AutoExec / Window")
+sectionAbout:CreateParagraph("Contents", tostring(#FaceIDLib.ThemeOrder) .. " themes, " .. tostring(#FaceIDLib.styleNames()) .. " icon styles")
+return window, face
 end
+
 
 function FaceIDLib:Load(url, config)
     if type(url) ~= "string" or url == "" then
